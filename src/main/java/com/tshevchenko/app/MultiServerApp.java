@@ -16,6 +16,13 @@ public class MultiServerApp
         int portEcho = 7;
         int portTime = 37;
         int portDayTime = 13;
+        StringBuilder sbArgs = new StringBuilder();
+        for(String arg : args){
+            if(sbArgs.length() > 0){
+                sbArgs.append(", ");
+            }
+            sbArgs.append(arg);
+        } 
         if (args.length <= 3) {
             try {
                 for(int arg = 0 ; arg < args.length ; ++arg){
@@ -31,13 +38,13 @@ public class MultiServerApp
                             break;
                     }
                 }
-            } catch (NumberFormatException e) {
-                System.err.println("EchoUDPServer: One of port numbers is invalid: "
-                        + args[0] + ", " + args[1] + ", " + args[2]);
+            } catch (NumberFormatException e) { 
+                System.err.println( "EchoUDPServer: One of port numbers is invalid: "
+                        + sbArgs.toString() );
                 System.exit(1);
             }
         }
-        System.err.println("Used ports: " + args[0] + ", " + args[1] + ", " + args[2]);
+        System.err.println("Used ports: " + sbArgs.toString());
 
         // At first, we create a SignalController instance in order to control
         // the running states of all the servers
