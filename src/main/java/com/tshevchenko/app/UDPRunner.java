@@ -19,7 +19,9 @@ public class UDPRunner implements IServerRunner{
     // Used to control termination of the main running server loop
     private volatile boolean isActive = true;
 
-    IService service;
+    // An interface variable for a service instance that will process one of the service functions:
+    // Echo, Time or Daytime
+    private IService service;
 
     public UDPRunner(int portNumber){
         this.portNumber = portNumber;

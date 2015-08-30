@@ -9,10 +9,10 @@ import java.util.*;
  * and finish their work
  */
 public class SignalController extends Thread implements ISignalNotifier {
-    private List<IServerObserver> serverObservers;
+    private List<IService> serviceObservers;
 
     public SignalController(){
-       serverObservers = new ArrayList<IServerObserver>();
+       serviceObservers = new ArrayList<IService>();
        registerForIntSignal();
     }
 
@@ -27,7 +27,7 @@ public class SignalController extends Thread implements ISignalNotifier {
     @Override
     public void run() {
         System.out.println("A SIGINT triggered. Notifying all the servers...");
-        notifyServerObservers();
+        notifyServiceObservers();
     }
 
     /**
@@ -35,12 +35,12 @@ public class SignalController extends Thread implements ISignalNotifier {
      * @param server
      */
     @Override
-    public void registerServerObserver(Server server){
-        if(server == null){ 
-            throw new NullPointerException("Null Server Observer");
+    public void registerServiceObserver(IService service){
+        if(service == null){ 
+            throw new NullPointerException("Null service");
         } 
-        if(!serverObservers.contains(server)){
-            serverObservers.add(server);
+        if(!serviceObservers.contains(service)){
+            serviceObservers.add(service);
         }
     }
 
@@ -48,11 +48,11 @@ public class SignalController extends Thread implements ISignalNotifier {
      * Notifies all the subscribed servers updating their running states
      */
     @Override
-    public void notifyServerObservers(){
-        for(IServerObserver server : serverObservers){
-            server.updateRunningState(false);
+    public void notifyServiceObservers(){
+        for(IService service : serviceObservers){
+            service.updateRunningState(false);
         }
-        System.out.println("Servers have been notified!");
+        System.out.println("Services have been notified!");
     }
 
 }

@@ -53,9 +53,9 @@ public class MultiServerApp
         EchoServer echoServerTCP = new EchoServer(runnerTCPFactory.getServerRunner(portEcho));
 
         // Registering the created servers with a SignalController
-        signalController.registerServerObserver(dayTimeServerTCP);
-        signalController.registerServerObserver(timeServerUDP);
-        signalController.registerServerObserver(echoServerTCP);
+        signalController.registerServiceObserver(dayTimeServerTCP);
+        signalController.registerServiceObserver(timeServerUDP);
+        signalController.registerServiceObserver(echoServerTCP);
 
         // Setting a blocking mode for a server, which will be running the latest
         // and it will block the whole application from exiting automatically immediately

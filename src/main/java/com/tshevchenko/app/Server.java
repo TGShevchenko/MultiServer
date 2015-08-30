@@ -14,7 +14,7 @@ import java.nio.ByteBuffer;
  * This abstract class contains basic operations
  * for various kind of running server instances.
  */
-public abstract class Server extends Thread implements IServerObserver{
+public abstract class Server extends Thread {
     protected final IServerRunner serverRunner;
 
     // Used to accept and respond queries in blocking or non- blocking mode.
@@ -51,6 +51,10 @@ public abstract class Server extends Thread implements IServerObserver{
         }
     }
 
+    /**
+     * Method sets a blocking mode for a server
+     * @param blockingMode
+     */
     public void setBlockingMode(boolean blockingMode){
         this.blockingMode = blockingMode;
     }

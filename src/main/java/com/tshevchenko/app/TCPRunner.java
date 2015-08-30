@@ -24,7 +24,7 @@ public class TCPRunner implements IServerRunner{
 
     // An interface variable for a service instance that will process one of the service functions:
     // Echo, Time or Daytime
-    IService service;
+    private IService service;
 
     public TCPRunner(int portNumber){
         this.portNumber = portNumber;
