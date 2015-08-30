@@ -44,6 +44,11 @@ public class UDPRunner implements IServerRunner{
     @Override
     public void updateRunningState(boolean state) {
         isActive = state;
+        try {
+            socket.close();
+        } catch (Throwable e) {
+        }
+        System.out.println("UDPRunner::updateRunningState. state=" + state);
     }
 
     /**

@@ -48,6 +48,11 @@ public class TCPRunner implements IServerRunner{
     @Override
     public void updateRunningState(boolean state) {
         isActive = state;
+        try{
+            serverSocketChannel.close();
+        } catch(Throwable e){
+        }
+        System.out.println("TCPRunner::updateRunningState. state=" + state);
     }
 
     /**

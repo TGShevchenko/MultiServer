@@ -1,7 +1,5 @@
 package com.tshevchenko.app;
 
-import java.net.DatagramPacket;
-import java.nio.channels.SocketChannel;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -10,19 +8,13 @@ import java.nio.charset.CharsetEncoder;
 /**
  * Class implements a server Daytime functionality (RFC 867)
  */
-public class DayTimeServer extends Server implements IServerObserver, IService{
+public class DayTimeServer extends Server implements IService{
     // Get an encoder for converting strings to bytes
     protected final CharsetEncoder encoder = Charset.forName("US-ASCII").newEncoder();
     public DayTimeServer(IServerRunner serverRunner){
         super(serverRunner);
         serverRunner.setService(this);
         System.out.println("DayTimeServer::DayTimeServer");
-    }
-
-    @Override
-    public void updateRunningState(boolean state){
-        serverRunner.updateRunningState(state);
-        System.out.println("DayTimeServer::updateRunningState");
     }
 
     /**

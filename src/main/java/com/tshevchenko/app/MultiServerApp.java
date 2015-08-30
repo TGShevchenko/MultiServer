@@ -43,24 +43,31 @@ public class MultiServerApp
         // the running states of all the servers
         SignalController signalController = new SignalController();
 
-        // Creating different kind of servers
-
+        // Creating 2 server factories
         ServerRunnerFactory runnerTCPFactory = new ServerRunnerFactory(ServerType.TCP);
         ServerRunnerFactory runnerUDPFactory = new ServerRunnerFactory(ServerType.UDP);
 
-        DayTimeServer dayTimeServerTCP =  new DayTimeServer(runnerTCPFactory.getServerRunner(portDayTime));
-        TimeServer timeServerUDP = new TimeServer(runnerUDPFactory.getServerRunner(portTime));
-        EchoServer echoServerTCP = new EchoServer(runnerTCPFactory.getServerRunner(portEcho));
+        // Creating 3 server runners for each service
+        IServerRunner dayTimeTCPRunner = runnerTCPFactory.getServerRunner(portDayTime);
+        IServerRunner timeUDPRunner = runnerUDPFactory.getServerRunner(portTime);
+        IServerRunner echoTCPRunner = runnerTCPFactory.getServerRunner(portEcho);
 
-        // Registering the created servers with a SignalController
-        signalController.registerServiceObserver(dayTimeServerTCP);
-        signalController.registerServiceObserver(timeServerUDP);
-        signalController.registerServiceObserver(echoServerTCP);
+        // Registering the created server runners with a SignalController
+        signalController.registerServerObserver(dayTimeTCPRunner);
+        signalController.registerServerObserver(timeUDPRunner);
+        signalController.registerServerObserver(echoTCPRunner);
+
+        // Creating servers with given functionality 
+        DayTimeServer dayTimeServerTCP =  new DayTimeServer(dayTimeTCPRunner);
+        TimeServer timeServerUDP = new TimeServer(timeUDPRunner);
+        EchoServer echoServerTCP = new EchoServer(echoTCPRunner);
 
         // Setting a blocking mode for a server, which will be running the latest
         // and it will block the whole application from exiting automatically immediately
         // after it starts
         echoServerTCP.setBlockingMode(true);
+
+        // Start servers for listening
         dayTimeServerTCP.startService();
         timeServerUDP.startService();
         echoServerTCP.startService();

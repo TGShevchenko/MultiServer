@@ -1,24 +1,16 @@
 package com.tshevchenko.app;
 
-import java.net.DatagramPacket;
-import java.nio.channels.SocketChannel;
 import java.nio.ByteBuffer;
 import java.util.Calendar;
 
 /**
  * Class implements a server Time functionality (RFC 868)
  */
-public class TimeServer extends Server implements IServerObserver, IService{
+public class TimeServer extends Server implements IService{
     public TimeServer(IServerRunner serverRunner){
         super(serverRunner);
         serverRunner.setService(this);
         System.out.println("TimeServer::TimeServer");
-    }
-
-    @Override
-    public void updateRunningState(boolean state){
-        serverRunner.updateRunningState(state);
-        System.out.println("TimeServer::updateRunningState");
     }
 
     /**

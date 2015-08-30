@@ -1,15 +1,5 @@
 package com.tshevchenko.app;
 
-import java.net.*;
-import java.net.DatagramPacket;
-import java.io.*;
-import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.ByteBuffer;
-
 /**
  * This abstract class contains basic operations
  * for various kind of running server instances.
