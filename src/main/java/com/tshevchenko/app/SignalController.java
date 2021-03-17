@@ -1,6 +1,8 @@
 package com.tshevchenko.app;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * SignalController class keeps all the created servers
@@ -9,10 +11,12 @@ import java.util.*;
  * and finish their work
  */
 public class SignalController extends Thread implements ISignalNotifier {
-    private List<IServerRunner> serverObservers;
+    private final Logger logger = Logger.getLogger(SignalController.class.getName());
+
+    private List<IServerRunner> serverRunners;
 
     public SignalController(){
-       serverObservers = new ArrayList<IServerRunner>();
+       serverRunners = new ArrayList<IServerRunner>();
        registerForIntSignal();
     }
 
@@ -26,33 +30,31 @@ public class SignalController extends Thread implements ISignalNotifier {
 
     @Override
     public void run() {
-        System.out.println("A SIGINT triggered. Notifying all the servers...");
-        notifyServerObservers();
+        logger.log(Level.INFO, "A SIGINT triggered. Notifying all the servers...");
+        notifyServerRunners();
     }
 
     /**
      * Registers a server instance, which will be notified for a termination
      * @param server
      */
-    @Override
-    public void registerServerObserver(IServerRunner server){
+    public void registerServerRunner(IServerRunner server){
         if(server == null){ 
             throw new NullPointerException("Null Server runner");
         } 
-        if(!serverObservers.contains(server)){
-            serverObservers.add(server);
+        if(!serverRunners.contains(server)){
+            serverRunners.add(server);
         }
     }
 
     /**
-     * Notifies all the subscribed servers updating their running states
+     * Updating running states for all server runners in the list
      */
-    @Override
-    public void notifyServerObservers(){
-        for(IServerRunner server : serverObservers){
+    public void notifyServerRunners(){
+        for(IServerRunner server : serverRunners){
             server.updateRunningState(false);
         }
-        System.out.println("Services have been notified!");
+        logger.log(Level.INFO, "Server runners have been notified!");
     }
 
 }

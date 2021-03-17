@@ -1,15 +1,19 @@
 package com.tshevchenko.app;
 
-import java.io.InterruptedIOException;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
+ * Class that implements the IServerRunner with accepting UDP connections.
  */
 public class UDPRunner implements IServerRunner{
+    private final Logger logger = Logger.getLogger(UDPRunner.class.getName());
+
     private final int portNumber;
 
     //A set of variables that are being used in message exchanging between clients and servers
@@ -25,7 +29,7 @@ public class UDPRunner implements IServerRunner{
 
     public UDPRunner(int portNumber){
         this.portNumber = portNumber;
-        System.out.println("UDPRunner::UDPRunner. port=" + portNumber);
+        logger.log(Level.INFO, "port=" + portNumber);
     }
 
     /**
@@ -34,21 +38,16 @@ public class UDPRunner implements IServerRunner{
      */
     public void setService(IService service){
         this.service = service;
-        System.out.println("UDPRunner::setService. service=" + service.getClass());
+        logger.log(Level.INFO, "service=" + service.getClass());
     }
     /**
      * Method updates a running state, which is used to interrupt
      * the main server processingloop
      * @param state
      */
-    @Override
     public void updateRunningState(boolean state) {
         isActive = state;
-        try {
-            socket.close();
-        } catch (Throwable e) {
-        }
-        System.out.println("UDPRunner::updateRunningState. state=" + state);
+        logger.log(Level.INFO, "state=" + state);
     }
 
     /**
@@ -56,16 +55,15 @@ public class UDPRunner implements IServerRunner{
      * All the server- specific logic is dedicated to a serviceUDP method
      */
     public void processRequests(){
-        System.out.println("UDPRunner::processRequests. START");
+        logger.log(Level.INFO, "START");
         try {
             socket = new DatagramSocket(new InetSocketAddress(portNumber));
             socket.setSoTimeout(Constants.SOCKET_TIMEOUT_MILLIS);
-            System.out.println("Server bound to port " + socket.getLocalPort());
             receivePacket =
                     new DatagramPacket(new byte[Constants.MAX_RECEIVED_DATA_LENGH],
                             Constants.MAX_RECEIVED_DATA_LENGH);
-        }catch (Throwable e) {
-            System.out.println("Exception in processRequests: " + e);
+        }catch (IOException ie) {
+            logger.log(Level.SEVERE, ie.toString(), ie);
         }
         while(isActive) {
             try {
@@ -74,19 +72,16 @@ public class UDPRunner implements IServerRunner{
                 //and returns back a ByteBuffer object
                 ByteBuffer receivedData = ByteBuffer.allocate(Constants.MAX_RECEIVED_DATA_LENGH);
                 receivedData.get(receivePacket.getData());
-                ByteBuffer response = service.runService(receivedData);
+                ByteBuffer response = service.processService(receivedData);
                 DatagramPacket sendPacket = new DatagramPacket(response.array(), response.limit());
                 // We send the packet back to the sender
                 socket.send(sendPacket);
-            } catch (InterruptedIOException e) {
-            } catch (Throwable e) {
+            } catch (IOException ie) {
+                logger.log(Level.SEVERE, ie.toString(), ie);
             }
         }
-        try {
-            socket.close();
-        } catch (Throwable e) {
-        }
-        System.out.println("UDPRunner::processRequests. FINISH");
+        socket.close();
+        logger.log(Level.INFO, "FINISH");
     }
 
 }

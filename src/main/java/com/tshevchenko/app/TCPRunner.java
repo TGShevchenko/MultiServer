@@ -1,25 +1,26 @@
 package com.tshevchenko.app;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
+ * Class that implements the IServerRunner with accepting TCP connections.
  */
 public class TCPRunner implements IServerRunner{
-    private final int portNumber;
+    private final Logger logger = Logger.getLogger(TCPRunner.class.getName());
 
-    // The TCP server socket used to receive connection requests
-    // private ServerSocket serverSocket = null;
+    private final int portNumber;
 
     // A set of variables that are being used in message exchanging between clients and servers
     private ServerSocketChannel serverSocketChannel;
     private SocketChannel socketChannel;
 
-    // Used to control termination of the main running server loop
+    // Used to control termination of the main server loop
     private volatile boolean isActive = true;
 
     // An interface variable for a service instance that will process one of the service functions:
@@ -28,7 +29,7 @@ public class TCPRunner implements IServerRunner{
 
     public TCPRunner(int portNumber){
         this.portNumber = portNumber;
-        System.out.println("TCPRunner::TCPRunner. port=" + portNumber);
+        logger.log(Level.INFO, "port=" + portNumber);
     }
 
     /**
@@ -37,7 +38,7 @@ public class TCPRunner implements IServerRunner{
      */
     public void setService(IService service){
         this.service = service;
-        System.out.println("TCPRunner::setService. service=" + service.getClass());
+        logger.log(Level.INFO, "service=" + service.getClass());
     }
 
     /**
@@ -45,29 +46,24 @@ public class TCPRunner implements IServerRunner{
      * the main server processingloop
      * @param state
      */
-    @Override
     public void updateRunningState(boolean state) {
         isActive = state;
-        try{
-            serverSocketChannel.close();
-        } catch(Throwable e){
-        }
-        System.out.println("TCPRunner::updateRunningState. state=" + state);
+        logger.log(Level.INFO, "state=" + state);
     }
 
     /**
      * A main processing loop for incoming TCP connections.
      * All the server- specific logic is dedicated to a serviceTCP method
      */
-    @Override
     public void processRequests(){
-        System.out.println("TCPRunner::processRequests. START");
+        logger.log(Level.INFO, "START");
         try{
             // Create a channel to listen for connections on.
             serverSocketChannel = ServerSocketChannel.open();
             // Bind the channel to a local port.
             serverSocketChannel.socket().bind(new InetSocketAddress(portNumber));
-        }catch(Throwable e) {
+        }catch(IOException ie) {
+            logger.log(Level.SEVERE, ie.toString(), ie);
         }
 
         // Loop until an isActive is false, processing client connections
@@ -79,13 +75,19 @@ public class TCPRunner implements IServerRunner{
                 //and returns back a ByteBuffer object
                 ByteBuffer receivedData = ByteBuffer.allocate(Constants.MAX_RECEIVED_DATA_LENGH);
                 socketChannel.read(receivedData);
-                ByteBuffer response = service.runService(receivedData);
+                ByteBuffer response = service.processService(receivedData);
                 // Send the response to the client and disconnect.
                 socketChannel.write(response);
                 socketChannel.close();
-            } catch (Throwable e) {
+            } catch (IOException ie) {
+                logger.log(Level.SEVERE, ie.toString(), ie);
             }
         }
-        System.out.println("TCPRunner::processRequests. FINISH");
+        try{
+            serverSocketChannel.close();
+        } catch(IOException ie){
+            logger.log(Level.SEVERE, ie.toString(), ie);
+        }
+        logger.log(Level.INFO, "FINISH");
     }
 }

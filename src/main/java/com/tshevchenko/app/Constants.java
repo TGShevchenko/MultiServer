@@ -1,7 +1,7 @@
 package com.tshevchenko.app;
 
 /**
- *
+ * Constants for a timeout and data length.
  */
 public final class Constants {
     // Server socket timeout milliseconds

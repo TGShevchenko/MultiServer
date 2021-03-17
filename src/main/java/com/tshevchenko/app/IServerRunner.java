@@ -7,7 +7,7 @@ package com.tshevchenko.app;
  * about their running state
  */
 public interface IServerRunner {
-    public void setService(IService service);
-    public void processRequests();
-    public void updateRunningState(boolean state);
+    void setService(IService service);
+    void processRequests();
+    void updateRunningState(boolean state);
 }

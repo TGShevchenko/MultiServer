@@ -39,7 +39,7 @@ public class MultiServerApp
                     }
                 }
             } catch (NumberFormatException e) { 
-                System.err.println( "EchoUDPServer: One of port numbers is invalid: "
+                System.err.println( "MultiServerApp: One of port numbers is invalid: "
                         + sbArgs.toString() );
                 System.exit(1);
             }
@@ -60,18 +60,17 @@ public class MultiServerApp
         IServerRunner echoTCPRunner = runnerTCPFactory.getServerRunner(portEcho);
 
         // Registering the created server runners with a SignalController
-        signalController.registerServerObserver(dayTimeTCPRunner);
-        signalController.registerServerObserver(timeUDPRunner);
-        signalController.registerServerObserver(echoTCPRunner);
+        signalController.registerServerRunner(dayTimeTCPRunner);
+        signalController.registerServerRunner(timeUDPRunner);
+        signalController.registerServerRunner(echoTCPRunner);
 
         // Creating servers with given functionality 
         DayTimeServer dayTimeServerTCP =  new DayTimeServer(dayTimeTCPRunner);
         TimeServer timeServerUDP = new TimeServer(timeUDPRunner);
         EchoServer echoServerTCP = new EchoServer(echoTCPRunner);
 
-        // Setting a blocking mode for a server, which will be running the latest
-        // and it will block the whole application from exiting automatically immediately
-        // after it starts
+        // Setting a blocking mode for a server, which will start running the last,
+        // and it will block the whole application from exiting
         echoServerTCP.setBlockingMode(true);
 
         // Start servers for listening

@@ -2,24 +2,27 @@ package com.tshevchenko.app;
 
 import java.nio.ByteBuffer;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class implements a server Time functionality (RFC 868)
  */
-public class TimeServer extends Server implements IService{
+public class TimeServer extends Server implements IService {
+    private final Logger logger = Logger.getLogger(TimeServer.class.getName());
+
     public TimeServer(IServerRunner serverRunner){
         super(serverRunner);
         serverRunner.setService(this);
-        System.out.println("TimeServer::TimeServer");
     }
 
     /**
      * Method makes the same processing for both UDP and TCP services
      * @return
      */
-    @Override
-    public ByteBuffer runService(ByteBuffer inputData){
-        System.out.println("TimeServer::runService");
+    public ByteBuffer processService(ByteBuffer inputData){
+        logger.log(Level.INFO, "TimeServer starts to process...");
+
         ByteBuffer response = ByteBuffer.allocate(4);
         Calendar calendar = Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"));
         calendar.set(1900, Calendar.JANUARY, 1, 0, 0, 0);
@@ -28,6 +31,7 @@ public class TimeServer extends Server implements IService{
         response.putInt((int) ((resultSecs >> 16) & 0xFF));
         response.putInt((int) ((resultSecs >> 8) & 0xFF));
         response.putInt((int) (resultSecs & 0xFF));
+
         return response;
     }
 }
