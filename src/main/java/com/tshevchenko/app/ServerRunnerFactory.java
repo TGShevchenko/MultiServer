@@ -15,14 +15,14 @@ public class ServerRunnerFactory {
         this.serverType = serverType;
     }
 
-    public IServerRunner getServerRunner(int portNumber){
+    public IServerRunner getServerRunner(int portNumber, IService service) {
         logger.log(Level.INFO, "portNumber=" + portNumber + ", serverType=" + serverType);
 
         IServerRunner serverRunner = null;
-        if(serverType == ServerType.TCP){
-            serverRunner = new TCPRunner(portNumber);
-        } else if (serverType == ServerType.UDP){
-            serverRunner = new UDPRunner(portNumber);
+        if(serverType == ServerType.TCP) {
+            serverRunner = new TCPRunner(portNumber, service);
+        } else if (serverType == ServerType.UDP) {
+            serverRunner = new UDPRunner(portNumber, service);
         } else {
             logger.log(Level.SEVERE, "Unknown server type. Exiting...");
             System.exit(0);

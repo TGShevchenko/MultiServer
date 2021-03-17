@@ -4,25 +4,32 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This abstract class contains basic operations
- * for various kind of running server instances.
+ * This server class contains basic operations
+ * for running a process request loop of an injected runner instance.
  */
-public abstract class Server extends Thread {
+public class Server extends Thread implements IServer {
     private final Logger logger = Logger.getLogger(Server.class.getName());
 
-    protected final IServerRunner serverRunner;
+    protected IServerRunner serverRunner;
+
+    // Used to control termination of the main running server loop
+    private volatile boolean isActive = true;
 
     // Used to accept and respond requests in blocking or non-blocking mode.
     // It needs to keep the last running server in a listening loop until a deactivate notification 
     // is received from a SignalNotifier
-    protected boolean blockingMode = false;
+    private boolean blockingMode = false;
 
     /**
      * A constructor
      * @param serverRunner
      */
-    public Server(IServerRunner serverRunner){
+    public void setServerRunner(IServerRunner serverRunner) {
         this.serverRunner = serverRunner;
+    }
+
+    public IServerRunner getServerRunner() {
+        return serverRunner;
     }
 
     @Override
@@ -54,4 +61,14 @@ public abstract class Server extends Thread {
         this.blockingMode = blockingMode;
     }
 
+
+    /**
+     * Method updates a running state, which is used to interrupt
+     * the main server processing loop
+     * @param state
+     */
+    public void updateRunningState(boolean state) {
+        isActive = state;
+        logger.log(Level.INFO, "state=" + state);
+    }
 }

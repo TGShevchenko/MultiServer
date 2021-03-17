@@ -8,20 +8,15 @@ import java.util.logging.Logger;
 /**
  * Class implements a server Time functionality (RFC 868)
  */
-public class TimeServer extends Server implements IService {
-    private final Logger logger = Logger.getLogger(TimeServer.class.getName());
-
-    public TimeServer(IServerRunner serverRunner){
-        super(serverRunner);
-        serverRunner.setService(this);
-    }
+public class TimeService implements IService {
+    private final Logger logger = Logger.getLogger(TimeService.class.getName());
 
     /**
      * Method makes the same processing for both UDP and TCP services
      * @return
      */
     public ByteBuffer processService(ByteBuffer inputData){
-        logger.log(Level.INFO, "TimeServer starts to process...");
+        logger.log(Level.INFO, "TimeService starts to process...");
 
         ByteBuffer response = ByteBuffer.allocate(4);
         Calendar calendar = Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"));

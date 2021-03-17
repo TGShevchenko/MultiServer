@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 /**
  * Class that implements the IServerRunner with accepting TCP connections.
  */
-public class TCPRunner implements IServerRunner{
+public class TCPRunner implements IServerRunner {
     private final Logger logger = Logger.getLogger(TCPRunner.class.getName());
 
     private final int portNumber;
@@ -27,28 +27,23 @@ public class TCPRunner implements IServerRunner{
     // Echo, Time or Daytime
     private IService service;
 
-    public TCPRunner(int portNumber){
-        this.portNumber = portNumber;
-        logger.log(Level.INFO, "port=" + portNumber);
-    }
-
     /**
-     *
+     * Constructor that takes a port number and two interfaces: IServer and IService
+     * @param portNumber
      * @param service
      */
-    public void setService(IService service){
+    public TCPRunner(int portNumber, IService service) {
+        this.portNumber = portNumber;
         this.service = service;
-        logger.log(Level.INFO, "service=" + service.getClass());
     }
 
     /**
      * Method updates a running state, which is used to interrupt
-     * the main server processingloop
+     * the main server processing loop
      * @param state
      */
     public void updateRunningState(boolean state) {
         isActive = state;
-        logger.log(Level.INFO, "state=" + state);
     }
 
     /**
@@ -90,4 +85,5 @@ public class TCPRunner implements IServerRunner{
         }
         logger.log(Level.INFO, "FINISH");
     }
+
 }

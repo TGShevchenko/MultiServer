@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 public class SignalController extends Thread implements ISignalNotifier {
     private final Logger logger = Logger.getLogger(SignalController.class.getName());
 
-    private List<IServerRunner> serverRunners;
+    private List<IServer> servers;
 
     public SignalController(){
-       serverRunners = new ArrayList<IServerRunner>();
+       servers = new ArrayList<IServer>();
        registerForIntSignal();
     }
 
@@ -38,12 +38,12 @@ public class SignalController extends Thread implements ISignalNotifier {
      * Registers a server instance, which will be notified for a termination
      * @param server
      */
-    public void registerServerRunner(IServerRunner server){
+    public void registerServer(IServer server){
         if(server == null){ 
-            throw new NullPointerException("Null Server runner");
+            throw new NullPointerException("Null Server");
         } 
-        if(!serverRunners.contains(server)){
-            serverRunners.add(server);
+        if(!servers.contains(server)){
+            servers.add(server);
         }
     }
 
@@ -51,8 +51,8 @@ public class SignalController extends Thread implements ISignalNotifier {
      * Updating running states for all server runners in the list
      */
     public void notifyServerRunners(){
-        for(IServerRunner server : serverRunners){
-            server.updateRunningState(false);
+        for(IServer server : servers){
+            server.getServerRunner().updateRunningState(false);
         }
         logger.log(Level.INFO, "Server runners have been notified!");
     }

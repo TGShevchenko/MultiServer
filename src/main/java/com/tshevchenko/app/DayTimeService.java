@@ -10,15 +10,11 @@ import java.util.logging.Logger;
 /**
  * Class implements a server Daytime functionality (RFC 867)
  */
-public class DayTimeServer extends Server implements IService{
-    private final Logger logger = Logger.getLogger(DayTimeServer.class.getName());
+public class DayTimeService implements IService {
+    private final Logger logger = Logger.getLogger(DayTimeService.class.getName());
 
     // Get an encoder for converting strings to bytes
     protected final CharsetEncoder encoder = Charset.forName("US-ASCII").newEncoder();
-    public DayTimeServer(IServerRunner serverRunner){
-        super(serverRunner);
-        serverRunner.setService(this);
-    }
 
     /**
      * Method makes the Daytime processing
@@ -26,7 +22,7 @@ public class DayTimeServer extends Server implements IService{
      * @return
      */
     public ByteBuffer processService(ByteBuffer receivedData){
-        logger.log(Level.INFO, "DayTimeServer starts to process...");
+        logger.log(Level.INFO, "DayTimeService starts to process...");
         ByteBuffer response = null;
         try{
             // Builds a response string, wrap, and encode to bytes

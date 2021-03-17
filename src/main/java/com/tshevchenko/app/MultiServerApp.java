@@ -46,36 +46,40 @@ public class MultiServerApp
         }
         System.err.println("Used ports: " + sbArgs.toString());
 
-        // At first, we create a SignalController instance in order to control
-        // the running states of all the servers
-        SignalController signalController = new SignalController();
-
         // Creating 2 server factories
         ServerRunnerFactory runnerTCPFactory = new ServerRunnerFactory(ServerType.TCP);
         ServerRunnerFactory runnerUDPFactory = new ServerRunnerFactory(ServerType.UDP);
 
         // Creating 3 server runners for each service
-        IServerRunner dayTimeTCPRunner = runnerTCPFactory.getServerRunner(portDayTime);
-        IServerRunner timeUDPRunner = runnerUDPFactory.getServerRunner(portTime);
-        IServerRunner echoTCPRunner = runnerTCPFactory.getServerRunner(portEcho);
+        IServerRunner dayTimeTCPRunner = runnerTCPFactory.getServerRunner(portDayTime, new DayTimeService());
+        IServerRunner timeUDPRunner = runnerUDPFactory.getServerRunner(portTime, new TimeService());
+        IServerRunner echoTCPRunner = runnerTCPFactory.getServerRunner(portEcho, new EchoService());
 
-        // Registering the created server runners with a SignalController
-        signalController.registerServerRunner(dayTimeTCPRunner);
-        signalController.registerServerRunner(timeUDPRunner);
-        signalController.registerServerRunner(echoTCPRunner);
+        //Create 3 servers to start runners in separate threads and control their running states
+        IServer dayTimeTCPServer = new Server();
+        IServer timeUDPServer = new Server();
+        IServer echoTCPServer = new Server();
 
-        // Creating servers with given functionality 
-        DayTimeServer dayTimeServerTCP =  new DayTimeServer(dayTimeTCPRunner);
-        TimeServer timeServerUDP = new TimeServer(timeUDPRunner);
-        EchoServer echoServerTCP = new EchoServer(echoTCPRunner);
+        dayTimeTCPServer.setServerRunner(dayTimeTCPRunner);
+        timeUDPServer.setServerRunner(timeUDPRunner);
+        echoTCPServer.setServerRunner(echoTCPRunner);
+
+        // We create a SignalController instance in order to control
+        // the running states of all the servers
+        SignalController signalController = new SignalController();
+
+        // Registering the created servers with a SignalController
+        signalController.registerServer(dayTimeTCPServer);
+        signalController.registerServer(timeUDPServer);
+        signalController.registerServer(echoTCPServer);
 
         // Setting a blocking mode for a server, which will start running the last,
         // and it will block the whole application from exiting
-        echoServerTCP.setBlockingMode(true);
+        echoTCPServer.setBlockingMode(true);
 
         // Start servers for listening
-        dayTimeServerTCP.startService();
-        timeServerUDP.startService();
-        echoServerTCP.startService();
+        dayTimeTCPServer.startService();
+        timeUDPServer.startService();
+        echoTCPServer.startService();
     }
 }

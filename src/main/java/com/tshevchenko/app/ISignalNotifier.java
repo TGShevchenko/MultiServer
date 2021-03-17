@@ -5,6 +5,6 @@ package com.tshevchenko.app;
  * in order to register server runner objects and send notifications to them
  */
 public interface ISignalNotifier{
-    void registerServerRunner(IServerRunner serverRunner);
+    void registerServer(IServer server);
     void notifyServerRunners();
 }

@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 /**
  * Class that implements the IServerRunner with accepting UDP connections.
  */
-public class UDPRunner implements IServerRunner{
+public class UDPRunner implements IServerRunner {
     private final Logger logger = Logger.getLogger(UDPRunner.class.getName());
 
     private final int portNumber;
@@ -27,27 +27,23 @@ public class UDPRunner implements IServerRunner{
     // Echo, Time or Daytime
     private IService service;
 
-    public UDPRunner(int portNumber){
+    /**
+     * Constructor that takes a port number and two interfaces: IServer and IService
+     * @param portNumber
+     * @param service
+     */
+    public UDPRunner(int portNumber, IService service) {
         this.portNumber = portNumber;
-        logger.log(Level.INFO, "port=" + portNumber);
+        this.service = service;
     }
 
     /**
-     *
-     * @param service
-     */
-    public void setService(IService service){
-        this.service = service;
-        logger.log(Level.INFO, "service=" + service.getClass());
-    }
-    /**
      * Method updates a running state, which is used to interrupt
-     * the main server processingloop
+     * the main server processing loop
      * @param state
      */
     public void updateRunningState(boolean state) {
         isActive = state;
-        logger.log(Level.INFO, "state=" + state);
     }
 
     /**
@@ -83,5 +79,4 @@ public class UDPRunner implements IServerRunner{
         socket.close();
         logger.log(Level.INFO, "FINISH");
     }
-
 }
