@@ -1,21 +1,33 @@
 package com.tshevchenko.app;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Unit test for TimeServer
+ * Unit test for Time Server
  */
-public class TimeServerTest extends TestCase {
+@DisplayName("TimeServerTest")
+class TimeServerTest{
 
-    public void testUpdateRunningState() throws Exception {
+    @Test
+    public void testStartAndStopServerWithRunnerAndService() {
+        int portTime = 37;
+        ServerRunnerFactory runnerUDPFactory = new ServerRunnerFactory(ServerType.UDP);
 
-    }
+        // Creating a server runner for a given service
+        IServerRunner timeUDPRunner = runnerUDPFactory.getServerRunner(portTime, new TimeService());
+        IServer timeUDPServer = new Server();
+        timeUDPServer.setServerRunner(timeUDPRunner);
+        timeUDPServer.startService();
+        assertTrue(timeUDPServer.getServerRunner().getRunningState());
 
-    public void testServiceUDP() throws Exception {
-
-    }
-
-    public void testServiceTCP() throws Exception {
-
+        // Registering the created servers with a SignalController
+        SignalController signalController = new SignalController();
+        signalController.registerServer(timeUDPServer);
+        signalController.notifyServerRunners(false);
+        assertFalse(timeUDPServer.getServerRunner().getRunningState());
     }
 }

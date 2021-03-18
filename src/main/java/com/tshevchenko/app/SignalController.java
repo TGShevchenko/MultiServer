@@ -31,7 +31,7 @@ public class SignalController extends Thread implements ISignalNotifier {
     @Override
     public void run() {
         logger.log(Level.INFO, "A SIGINT triggered. Notifying all the servers...");
-        notifyServerRunners();
+        notifyServerRunners(false);
     }
 
     /**
@@ -50,13 +50,20 @@ public class SignalController extends Thread implements ISignalNotifier {
     /**
      * Updating running states for all server runners in the list
      */
-    public void notifyServerRunners(){
+    public void notifyServerRunners(boolean state){
         for(IServer server : servers){
-            server.getServerRunner().updateRunningState(false);
+            server.getServerRunner().updateRunningState(state);
         }
         logger.log(Level.INFO, "Server runners have been notified!");
     }
 
+    /**
+     * Returns the servers' list
+     * @return
+     */
+    public List<IServer> getServers() {
+        return servers;
+    }
 }
 
 

@@ -46,12 +46,15 @@ public class UDPRunner implements IServerRunner {
         isActive = state;
     }
 
+    public boolean getRunningState() { return isActive; }
+
     /**
      * A main processing loop for incoming UDP connections.
      * All the server- specific logic is dedicated to a serviceUDP method
      */
-    public void processRequests(){
-        logger.log(Level.INFO, "START");
+    public boolean processRequests(){
+        logger.log(Level.INFO, "UDPRunner: Started processing requests...");
+        boolean processingResult = true;
         try {
             socket = new DatagramSocket(new InetSocketAddress(portNumber));
             socket.setSoTimeout(Constants.SOCKET_TIMEOUT_MILLIS);
@@ -60,6 +63,7 @@ public class UDPRunner implements IServerRunner {
                             Constants.MAX_RECEIVED_DATA_LENGH);
         }catch (IOException ie) {
             logger.log(Level.SEVERE, ie.toString(), ie);
+            return false;
         }
         while(isActive) {
             try {
@@ -74,9 +78,11 @@ public class UDPRunner implements IServerRunner {
                 socket.send(sendPacket);
             } catch (IOException ie) {
                 logger.log(Level.SEVERE, ie.toString(), ie);
+                processingResult = false;
             }
         }
         socket.close();
-        logger.log(Level.INFO, "FINISH");
+        logger.log(Level.INFO, "UDPRunner: Finished processing requests.");
+        return processingResult;
     }
 }

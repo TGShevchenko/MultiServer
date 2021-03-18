@@ -1,7 +1,7 @@
 package com.tshevchenko.app;
 
 /**
- * An interface for a server implementation
+ * A Server interface
  */
 public interface IServer {
     void startService();

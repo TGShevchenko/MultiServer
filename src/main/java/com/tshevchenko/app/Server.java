@@ -60,15 +60,4 @@ public class Server extends Thread implements IServer {
     public void setBlockingMode(boolean blockingMode){
         this.blockingMode = blockingMode;
     }
-
-
-    /**
-     * Method updates a running state, which is used to interrupt
-     * the main server processing loop
-     * @param state
-     */
-    public void updateRunningState(boolean state) {
-        isActive = state;
-        logger.log(Level.INFO, "state=" + state);
-    }
 }
