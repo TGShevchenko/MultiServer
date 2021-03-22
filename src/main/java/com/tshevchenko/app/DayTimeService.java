@@ -21,14 +21,14 @@ public class DayTimeService implements IService {
      * @param receivedData
      * @return
      */
-    public ByteBuffer processService(ByteBuffer receivedData){
+    public ByteBuffer processService(ByteBuffer receivedData) {
         logger.log(Level.INFO, "DayTimeService starts to process...");
         ByteBuffer response = null;
-        try{
+        try {
             // Builds a response string, wrap, and encode to bytes
             String date = new java.util.Date().toString() + "\r\n";
             response = encoder.encode(CharBuffer.wrap(date));
-        }catch(java.nio.charset.CharacterCodingException cce){
+        } catch(java.nio.charset.CharacterCodingException cce){
             logger.log(Level.SEVERE, cce.toString(), cce);
         }
         return response;

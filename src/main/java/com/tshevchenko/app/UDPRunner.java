@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,9 +53,8 @@ public class UDPRunner implements IServerRunner {
      * A main processing loop for incoming UDP connections.
      * All the server- specific logic is dedicated to a serviceUDP method
      */
-    public boolean processRequests(){
+    public void processRequests() {
         logger.log(Level.INFO, "UDPRunner: Started processing requests...");
-        boolean processingResult = true;
         try {
             socket = new DatagramSocket(new InetSocketAddress(portNumber));
             socket.setSoTimeout(Constants.SOCKET_TIMEOUT_MILLIS);
@@ -63,7 +63,6 @@ public class UDPRunner implements IServerRunner {
                             Constants.MAX_RECEIVED_DATA_LENGH);
         }catch (IOException ie) {
             logger.log(Level.SEVERE, ie.toString(), ie);
-            return false;
         }
         while(isActive) {
             try {
@@ -76,13 +75,13 @@ public class UDPRunner implements IServerRunner {
                 DatagramPacket sendPacket = new DatagramPacket(response.array(), response.limit());
                 // We send the packet back to the sender
                 socket.send(sendPacket);
+            } catch (SocketTimeoutException ste) {
+                logger.log(Level.FINE, ste.toString(), ste);
             } catch (IOException ie) {
                 logger.log(Level.SEVERE, ie.toString(), ie);
-                processingResult = false;
             }
         }
         socket.close();
         logger.log(Level.INFO, "UDPRunner: Finished processing requests.");
-        return processingResult;
     }
 }

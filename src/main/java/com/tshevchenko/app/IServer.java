@@ -5,7 +5,7 @@ package com.tshevchenko.app;
  */
 public interface IServer {
     void startService();
-    void setBlockingMode(boolean blockingMode);
+    void waitServerThreadsToJoin();
     void setServerRunner(IServerRunner serverRunner);
     IServerRunner getServerRunner();
 }

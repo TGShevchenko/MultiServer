@@ -1,50 +1,16 @@
 package com.tshevchenko.app;
 
+import java.util.logging.Level;
+
 /**
  * Main class to run a multiple server test task
  *
  */
-public class MultiServerApp
-{
-    public static void main( String[] args )
-    {
-        if (args.length > 3) {
-            System.err.println("Usage: TestApp [PORT_ECHO] [PORT_TIME] [PORT_DAYTIME]");
-            System.exit(1);
-        }
-
+public class MultiServerApp {
+    public static void main( String[] args ) {
         int portEcho = 7;
         int portTime = 37;
         int portDayTime = 13;
-        StringBuilder sbArgs = new StringBuilder();
-        for(String arg : args){
-            if(sbArgs.length() > 0){
-                sbArgs.append(", ");
-            }
-            sbArgs.append(arg);
-        } 
-        if (args.length <= 3) {
-            try {
-                for(int arg = 0 ; arg < args.length ; ++arg){
-                    switch(arg){
-                        case 0:
-                            portEcho = Integer.parseInt(args[0]);
-                            break;
-                        case 1:
-                            portTime = Integer.parseInt(args[1]);
-                            break;
-                        case 2:
-                            portDayTime = Integer.parseInt(args[2]);
-                            break;
-                    }
-                }
-            } catch (NumberFormatException e) { 
-                System.err.println( "MultiServerApp: One of port numbers is invalid: "
-                        + sbArgs.toString() );
-                System.exit(1);
-            }
-        }
-        System.err.println("Used ports: " + sbArgs.toString());
 
         // Creating 2 server factories
         ServerRunnerFactory runnerTCPFactory = new ServerRunnerFactory(ServerType.TCP);
@@ -73,13 +39,10 @@ public class MultiServerApp
         signalController.registerServer(timeUDPServer);
         signalController.registerServer(echoTCPServer);
 
-        // Setting a blocking mode for a server, which will start running the last,
-        // and it will block the whole application from exiting
-        echoTCPServer.setBlockingMode(true);
-
         // Start servers for listening
         dayTimeTCPServer.startService();
         timeUDPServer.startService();
         echoTCPServer.startService();
+        echoTCPServer.waitServerThreadsToJoin();
     }
 }

@@ -15,7 +15,7 @@ public class SignalController extends Thread implements ISignalNotifier {
 
     private List<IServer> servers;
 
-    public SignalController(){
+    public SignalController() {
        servers = new ArrayList<IServer>();
        registerForIntSignal();
     }
@@ -38,11 +38,11 @@ public class SignalController extends Thread implements ISignalNotifier {
      * Registers a server instance, which will be notified for a termination
      * @param server
      */
-    public void registerServer(IServer server){
-        if(server == null){ 
+    public void registerServer(IServer server) {
+        if(server == null) {
             throw new NullPointerException("Null Server");
         } 
-        if(!servers.contains(server)){
+        if(!servers.contains(server)) {
             servers.add(server);
         }
     }
@@ -50,8 +50,8 @@ public class SignalController extends Thread implements ISignalNotifier {
     /**
      * Updating running states for all server runners in the list
      */
-    public void notifyServerRunners(boolean state){
-        for(IServer server : servers){
+    public void notifyServerRunners(boolean state) {
+        for(IServer server : servers) {
             server.getServerRunner().updateRunningState(state);
         }
         logger.log(Level.INFO, "Server runners have been notified!");

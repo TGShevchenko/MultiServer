@@ -52,17 +52,15 @@ public class TCPRunner implements IServerRunner {
      * A main processing loop for incoming TCP connections.
      * All the server- specific logic is dedicated to a serviceTCP method
      */
-    public boolean processRequests(){
+    public void processRequests() {
         logger.log(Level.INFO, "TCPRunner: Start processing requests...");
-        boolean processingResult = true;
-        try{
+        try {
             // Create a channel to listen for connections on.
             serverSocketChannel = ServerSocketChannel.open();
             // Bind the channel to a local port.
             serverSocketChannel.socket().bind(new InetSocketAddress(portNumber));
-        }catch(IOException ie) {
+        } catch(IOException ie) {
             logger.log(Level.SEVERE, ie.toString(), ie);
-            return false;
         }
 
         // Loop until an isActive is false, processing client connections
@@ -80,17 +78,14 @@ public class TCPRunner implements IServerRunner {
                 socketChannel.close();
             } catch (IOException ie) {
                 logger.log(Level.SEVERE, ie.toString(), ie);
-                processingResult = false;
             }
         }
         try{
             serverSocketChannel.close();
-        } catch(IOException ie){
+        } catch(IOException ie) {
             logger.log(Level.SEVERE, ie.toString(), ie);
-            processingResult = false;
         }
         logger.log(Level.INFO, "TCPRunner: Finished processing requests...");
-        return processingResult;
     }
 
 }

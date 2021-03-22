@@ -26,6 +26,7 @@ class DayTimeServerTest{
         SignalController signalController = new SignalController();
         signalController.registerServer(dayTimeTCPServer);
         signalController.notifyServerRunners(false);
+        dayTimeTCPServer.waitServerThreadsToJoin();
         assertFalse(dayTimeTCPServer.getServerRunner().getRunningState());
     }
 }

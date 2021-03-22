@@ -12,18 +12,6 @@ public class Server extends Thread implements IServer {
 
     protected IServerRunner serverRunner;
 
-    // Used to control termination of the main running server loop
-    private volatile boolean isActive = true;
-
-    // Used to accept and respond requests in blocking or non-blocking mode.
-    // It needs to keep the last running server in a listening loop until a deactivate notification 
-    // is received from a SignalNotifier
-    private boolean blockingMode = false;
-
-    /**
-     * A constructor
-     * @param serverRunner
-     */
     public void setServerRunner(IServerRunner serverRunner) {
         this.serverRunner = serverRunner;
     }
@@ -38,26 +26,20 @@ public class Server extends Thread implements IServer {
     }
 
     /**
-     * Method starts the main processing server loop either in
-     * a separate thread (non-blocking mode) or in the same thread (blocking mode)
-     * A blocking mode is being used in order to avoid the main application finish
-     * its work after all the server instances have been started.
+     * Method waits the servers' threads to join
      */
-    public void startService(){
-        logger.log(Level.INFO, "blockingMode=" + blockingMode);
-        if(blockingMode) {
-            serverRunner.processRequests();
-        }
-        else{
-            start();
+    public void waitServerThreadsToJoin() {
+        try {
+            join();
+        } catch(InterruptedException ie){
+            logger.log(Level.SEVERE, ie.toString(), ie);
         }
     }
 
     /**
-     * Method sets a blocking mode for a server
-     * @param blockingMode
+     * Method starts this thread, which runs processing by a server runner.
      */
-    public void setBlockingMode(boolean blockingMode){
-        this.blockingMode = blockingMode;
+    public void startService(){
+        start();
     }
 }
