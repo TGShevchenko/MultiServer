@@ -53,7 +53,7 @@ public class TCPRunner implements IServerRunner {
      * All the server- specific logic is dedicated to a serviceTCP method
      */
     public void processRequests() {
-        logger.log(Level.INFO, "TCPRunner: Start processing requests...");
+        logger.log(Level.INFO, "TCPRunner: Start processing requests.");
         try {
             // Create a channel to listen for connections on.
             serverSocketChannel = ServerSocketChannel.open();
@@ -85,7 +85,6 @@ public class TCPRunner implements IServerRunner {
         } catch(IOException ie) {
             logger.log(Level.SEVERE, ie.toString(), ie);
         }
-        logger.log(Level.INFO, "TCPRunner: Finished processing requests...");
+        logger.log(Level.INFO, "TCPRunner: Finished processing requests.");
     }
-
 }

@@ -27,7 +27,7 @@ class TimeServerTest{
         // Registering the created servers with a SignalController
         SignalController signalController = new SignalController();
         signalController.registerServer(timeUDPServer);
-        signalController.notifyServerRunners(false);
+        signalController.notifyServers(false);
         assertFalse(timeUDPServer.getServerRunner().getRunningState());
     }
 }

@@ -28,7 +28,7 @@ class EchoServerTest{
         // Registering the created servers with a SignalController
         SignalController signalController = new SignalController();
         signalController.registerServer(echoTCPServer);
-        signalController.notifyServerRunners(false);
+        signalController.notifyServers(false);
         assertFalse(echoTCPServer.getServerRunner().getRunningState());
     }
 }

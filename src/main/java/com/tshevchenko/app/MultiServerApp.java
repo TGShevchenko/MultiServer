@@ -1,7 +1,5 @@
 package com.tshevchenko.app;
 
-import java.util.logging.Level;
-
 /**
  * Main class to run a multiple server test task
  *
@@ -43,6 +41,7 @@ public class MultiServerApp {
         dayTimeTCPServer.startService();
         timeUDPServer.startService();
         echoTCPServer.startService();
-        echoTCPServer.waitServerThreadsToJoin();
+
+        signalController.waitServerThreadsToJoin();
     }
 }

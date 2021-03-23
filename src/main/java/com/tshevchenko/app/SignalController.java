@@ -31,7 +31,17 @@ public class SignalController extends Thread implements ISignalNotifier {
     @Override
     public void run() {
         logger.log(Level.INFO, "A SIGINT triggered. Notifying all the servers...");
-        notifyServerRunners(false);
+        notifyServers(false);
+    }
+
+    /**
+     * Waits the servers' threads to join
+     */
+    public void waitServerThreadsToJoin() {
+        if(!servers.isEmpty()){
+            servers.get(0).waitThreadsToJoin();
+        }
+        logger.log(Level.INFO, "All servers threads have joined.");
     }
 
     /**
@@ -48,13 +58,13 @@ public class SignalController extends Thread implements ISignalNotifier {
     }
 
     /**
-     * Updating running states for all server runners in the list
+     * Updating running states for all servers in the list
      */
-    public void notifyServerRunners(boolean state) {
+    public void notifyServers(boolean state) {
         for(IServer server : servers) {
             server.getServerRunner().updateRunningState(state);
         }
-        logger.log(Level.INFO, "Server runners have been notified!");
+        logger.log(Level.INFO, "Servers have been notified!");
     }
 
     /**

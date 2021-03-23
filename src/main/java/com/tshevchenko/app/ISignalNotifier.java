@@ -8,6 +8,7 @@ import java.util.List;
  */
 public interface ISignalNotifier {
     void registerServer(IServer server);
-    void notifyServerRunners(boolean state);
+    void notifyServers(boolean state);
     List<IServer> getServers();
+    void waitServerThreadsToJoin();
 }

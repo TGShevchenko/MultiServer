@@ -26,20 +26,20 @@ public class Server extends Thread implements IServer {
     }
 
     /**
-     * Method waits the servers' threads to join
-     */
-    public void waitServerThreadsToJoin() {
-        try {
-            join();
-        } catch(InterruptedException ie){
-            logger.log(Level.SEVERE, ie.toString(), ie);
-        }
-    }
-
-    /**
      * Method starts this thread, which runs processing by a server runner.
      */
     public void startService(){
         start();
+    }
+
+    /**
+     * Waits for other servers threads to join
+     */
+    public void waitThreadsToJoin() {
+        try {
+            join();
+        } catch (InterruptedException ie) {
+            logger.log(Level.SEVERE, ie.toString(), ie);
+        }
     }
 }

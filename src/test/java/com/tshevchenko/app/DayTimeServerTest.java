@@ -25,8 +25,8 @@ class DayTimeServerTest{
         // Registering the created servers with a SignalController
         SignalController signalController = new SignalController();
         signalController.registerServer(dayTimeTCPServer);
-        signalController.notifyServerRunners(false);
-        dayTimeTCPServer.waitServerThreadsToJoin();
+        signalController.notifyServers(false);
+        signalController.waitServerThreadsToJoin();
         assertFalse(dayTimeTCPServer.getServerRunner().getRunningState());
     }
 }

@@ -54,7 +54,7 @@ public class UDPRunner implements IServerRunner {
      * All the server- specific logic is dedicated to a serviceUDP method
      */
     public void processRequests() {
-        logger.log(Level.INFO, "UDPRunner: Started processing requests...");
+        logger.log(Level.INFO, "UDPRunner: Start processing requests.");
         try {
             socket = new DatagramSocket(new InetSocketAddress(portNumber));
             socket.setSoTimeout(Constants.SOCKET_TIMEOUT_MILLIS);

@@ -54,7 +54,7 @@ class SignalControllerTest{
             //Check that the running state of each server is true
             assertTrue(server.getServerRunner().getRunningState());
         }
-        signalController.notifyServerRunners(false);
+        signalController.notifyServers(false);
         for(IServer server : signalController.getServers()) {
             //Check that the running state of each server is false
             assertFalse(server.getServerRunner().getRunningState());
